@@ -1,4 +1,4 @@
-module RightFolds.Prelude
+module FoldsR.Prelude
 (
   module Exports,
 )

@@ -1,7 +1,7 @@
-module RightFolds
+module FoldsR
 where
 
-import RightFolds.Prelude
+import FoldsR.Prelude
 import Data.Fold.R
 import qualified Data.Text.Internal as TextInternal
 import qualified Data.Text.Internal.Encoding.Utf16 as TextUtf16

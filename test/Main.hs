@@ -10,13 +10,13 @@ import Test.Tasty.QuickCheck
 import qualified Test.QuickCheck as QuickCheck
 import qualified Test.QuickCheck.Property as QuickCheck
 import qualified Data.Text as Text
-import qualified RightFolds
+import qualified FoldsR
 
 
 main =
   defaultMain $ testGroup "All" $ [
     testGroup "charText" [
       testProperty "Text roundtrip" $ \(list :: [Char]) ->
-        Text.pack list === run list RightFolds.charText
+        Text.pack list === run list FoldsR.charText
       ]
     ]
