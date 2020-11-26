@@ -11,6 +11,17 @@ import qualified Data.Text.Array as TextArray
 
 
 {-|
+Same as 'many', but immediately folds the value.
+-}
+foldMany :: Alternative f => R a b -> f a -> f b
+foldMany (R extract step init) fa =
+  let
+    loop =
+      liftA2 step fa loop <|>
+      pure init
+    in fmap extract loop
+
+{-|
 Fold constructing text from chars.
 -}
 charText :: R Char Text

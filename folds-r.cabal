@@ -45,6 +45,7 @@ test-suite test
   main-is:
     Main.hs
   build-depends:
+    attoparsec >=0.13 && <0.14,
     folds,
     folds-r,
     QuickCheck >=2.8.1 && <3,

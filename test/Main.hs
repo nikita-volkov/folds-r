@@ -11,6 +11,7 @@ import qualified Test.QuickCheck as QuickCheck
 import qualified Test.QuickCheck.Property as QuickCheck
 import qualified Data.Text as Text
 import qualified FoldsR
+import qualified Data.Attoparsec.Text as Atto
 
 
 main =
@@ -58,5 +59,15 @@ main =
             run (Text.unpack text) (FoldsR.trimmingWhitespace FoldsR.charText)
           in
             expected === actual
+      ]
+    ,
+    testGroup "foldMany" [
+      testProperty "" $ \(input :: Text) ->
+        let
+          actual =
+            Atto.parseOnly (FoldsR.foldMany FoldsR.charText (Atto.satisfy isAlphaNum)) input
+          expected =
+            Atto.parseOnly (Text.pack <$> many (Atto.satisfy isAlphaNum)) input
+          in expected === actual
       ]
     ]
