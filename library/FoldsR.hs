@@ -19,12 +19,12 @@ charText =
   where
     execute finalize =
       finalize [] 0 
-    progress char next !list !arraySize =
+    progress char next !bytes !arraySize =
       let
         codepoint =
           ord char
         in if codepoint < 0x10000
-          then next (fromIntegral codepoint : list) (succ arraySize)
+          then next (fromIntegral codepoint : bytes) (succ arraySize)
           else let
             cpBasis =
               codepoint - 0x10000
@@ -32,16 +32,16 @@ charText =
               fromIntegral ((cpBasis `shiftR` 10) + 0xd800)
             byte2 =
               fromIntegral ((cpBasis .&. 0x3ff) + 0xdc00)
-            in next (byte2 : byte1 : list) (arraySize + 2)
+            in next (byte2 : byte1 : bytes) (arraySize + 2)
     finalize revListOfBytes arraySize =
       TextPrivate.runText $ \terminate -> do
         array <- TextArray.new arraySize
         let
-          loop !offset list =
-            case list of
-              byte : listTail ->
+          loop !offset bytes =
+            case bytes of
+              byte : bytesTail ->
                 TextArray.unsafeWrite array offset byte *>
-                loop (pred offset) listTail
+                loop (pred offset) bytesTail
               [] ->
                 return ()
           in loop (pred arraySize) revListOfBytes
