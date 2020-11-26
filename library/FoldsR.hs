@@ -46,3 +46,36 @@ charText =
                 return ()
           in loop (pred arraySize) revListOfBytes
         terminate array arraySize
+
+{-|
+Transformer of chars,
+replaces all space-like chars with space,
+all newline-like chars with @\\n@,
+and trims their duplicate sequences to single-char.
+Oh yeah, it also trims whitespace from beginning and end.
+-}
+trimmingWhitespace :: R Char o -> R Char o
+trimmingWhitespace (R executeInner progressInner finalizeInner) =
+  R execute progress finalize
+  where
+    execute finalize =
+      executeInner (finalize False False False)
+    progress char next notFirst spacePending newlinePending =
+      if isSpace char
+        then if char == '\n' || char == '\r'
+          then next notFirst False True
+          else next notFirst True newlinePending
+        else
+          let
+            mapper =
+              if notFirst
+                then if newlinePending
+                  then progressInner '\n'
+                  else if spacePending
+                    then progressInner ' '
+                    else id
+                else id
+            in
+              mapper $ progressInner char $ next True False False
+    finalize notFirst spacePending newlinePending =
+      finalizeInner
