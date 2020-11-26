@@ -10,6 +10,9 @@ import qualified Data.Text.Internal.Unsafe.Char as TextChar
 import qualified Data.Text.Array as TextArray
 
 
+{-|
+Fold constructing text from chars.
+-}
 charText :: R Char Text
 charText =
   R execute progress finalize
