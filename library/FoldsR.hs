@@ -8,6 +8,7 @@ import qualified Data.Text.Internal.Encoding.Utf16 as TextUtf16
 import qualified Data.Text.Internal.Private as TextPrivate
 import qualified Data.Text.Internal.Unsafe.Char as TextChar
 import qualified Data.Text.Array as TextArray
+import qualified Data.Text as Text
 
 
 {-|
@@ -90,3 +91,14 @@ trimmingWhitespace (R executeInner progressInner finalizeInner) =
               mapper $ progressInner char $ next True False False
     finalize notFirst spacePending newlinePending =
       finalizeInner
+
+{-|
+Create a text chunk reducer,
+applying a char reducer to every char in it.
+-}
+foldingTextChars :: R Char o -> R Text o
+foldingTextChars (R extractInner stepInner initInner) =
+  R extractInner step initInner
+  where
+    step text acc =
+      Text.foldr stepInner acc text

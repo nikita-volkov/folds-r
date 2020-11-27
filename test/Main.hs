@@ -70,4 +70,10 @@ main =
             Atto.parseOnly (Text.pack <$> many (Atto.satisfy isAlphaNum)) input
           in expected === actual
       ]
+    ,
+    testGroup "foldingTextChars" [
+      testProperty "" $ \(input :: [Text]) ->
+        mconcat input ===
+        run input (FoldsR.foldingTextChars FoldsR.charText)
+      ]
     ]
