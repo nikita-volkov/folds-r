@@ -93,8 +93,17 @@ trimmingWhitespace (R executeInner progressInner finalizeInner) =
       finalizeInner
 
 {-|
-Create a text chunk reducer,
-applying a char reducer to every char in it.
+Focus a fold on every element of foldable input values.
+-}
+folding :: Foldable f => R i o -> R (f i) o
+folding (R extractInner stepInner initInner) =
+  R extractInner step initInner
+  where
+    step text acc =
+      foldr stepInner acc text
+
+{-|
+Focus a fold on every char of input texts.
 -}
 foldingTextChars :: R Char o -> R Text o
 foldingTextChars (R extractInner stepInner initInner) =
